@@ -86,7 +86,12 @@
                         row.hide();
                         forms = $('.' + options.formCssClass).not(':hidden');
                     } else {
-                        row.remove();
+                        if (typeof animateOnAdd == 'function'){
+                            animateOnRemove(row);
+                        }else{
+                            row.remove();
+                        }
+
                         // Update the TOTAL_FORMS count:
                         forms = $('.' + options.formCssClass).not('.formset-custom-template');
                         totalForms.val(forms.length);
@@ -225,7 +230,22 @@
         formCssClass: 'dynamic-form',    // CSS class applied to each form in a formset
         extraClasses: [],                // Additional CSS classes, which will be applied to each form in turn
         keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
-        added: null,                     // Function called each time a new form is added
-        removed: null                    // Function called each time a form is deleted
+        added: animateOnAdd,             // Function called each time a new form is added
+        removed: animateOnRemove         // Function called each time a form is deleted
     };
+
+    // Animate on add form
+    function animateOnAdd(addedForm){
+        addedForm.css({'opacity': 0});
+        addedForm.animate({'opacity': 1});
+    }
+    // Animate on remove form
+    function animateOnRemove(removedForm){
+        removedForm.animate({
+          opacity: 0
+        }, function() {
+          removedForm.remove();
+        });
+    }
+
 })(jQuery);
